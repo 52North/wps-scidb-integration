@@ -1,6 +1,5 @@
 target/
 nbactions.xml
-src/main/resources/arraystorage.txt
 src/main/resources/SciDB-0-0-scidb
 src/main/resources/scidb-stderr.log
 src/main/resources/scidb-stdout.log
