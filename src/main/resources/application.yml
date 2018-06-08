@@ -1,0 +1,10 @@
+spring:
+    application:
+        name: 52North - SciDB WCS
+    
+shim:
+    address: localhost
+    port: 8080
+    
+server:
+    port: 8081

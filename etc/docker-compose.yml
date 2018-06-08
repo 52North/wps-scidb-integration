@@ -1,0 +1,113 @@
+################################################################################
+#                                                                              #
+#    Copyright (C) 2018-2018 52°North Initiative for Geospatial Open Source    #
+#    Software GmbH                                                             #
+#                                                                              #
+#    This program is free software; you can redistribute it and/or modify it   #
+#    under the terms of the GNU General Public License version 2 as published  #
+#    by the Free Software Foundation.                                          #
+#                                                                              #
+#    If the program is linked with libraries which are licensed under one of   #
+#    the following licenses, the combination of the program with the linked    #
+#    library is not considered a "derivative work" of the program:             #
+#                                                                              #
+#        - Apache License, version 2.0                                         #
+#        - Apache Software License, version 1.0                                #
+#        - GNU Lesser General Public License, version 3                        #
+#        - Mozilla Public License, versions 1.0, 1.1 and 2.0                   #
+#        - Common Development and Distribution License (CDDL), version 1.0     #
+#                                                                              #
+#    Therefore the distribution of the program linked with libraries licensed  #
+#    under the aforementioned licenses, is permitted by the copyright holders  #
+#    if the distribution is compliant with both the GNU General Public         #
+#    License version 2 and the aforementioned licenses.                        #
+#                                                                              #
+#    This program is distributed in the hope that it will be useful, but       #
+#    WITHOUT ANY WARRANTY; without even the implied warranty of                #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General  #
+#    Public License for more details.                                          #
+#                                                                              #
+################################################################################
+#                                                                              #
+#                                                                              #
+#   Before starting:                                                           #                                              #
+#     - requies environment where PWD is supported (git bash under             #
+#       windows).                                                              #
+#                                                                              #
+#   Start via PROJECT_ROOT:$ docker-compose --file etc/docker-compose.yml up   #
+#                                                                              #
+################################################################################
+
+version: '3'
+
+################################################################################
+#                                                                              #
+#                     Services                                                 #
+#                                                                              #
+################################################################################
+services:
+
+  wms:
+    image: openjdk:8-jdk-alpine
+    container_name: wms
+    volumes:
+      - "${PWD}/target/SciDB-WCS-0.1.jar:/tmp/service.jar"
+      - "${PWD}/src/main/resources/arraystorage.txt:/opt/scidb/16.9/DB-scidb/0/0/arraystorage.txt"
+      - "${PWD}/src/main/resources/:/opt/scidb/16.9/DB-scidb/0/0/"
+      - "data-volume:/opt/scidb/16.9/DB-scidb/0/0/"
+    ports:
+      - 8081:8081
+      - 8085:8085
+    command: [
+      "java",
+      "-Xdebug",
+      "-Xrunjdwp:transport=dt_socket,server=y,address=8085,suspend=n",
+      "-jar",
+      "/tmp/service.jar",
+      "--server.servlet.contextPath=/",
+      "--server.port=8081",
+      "--shim.address=172.52.0.106",
+      "--shim.port=8080"
+    ]
+    networks:
+      network:
+        ipv4_address: 172.52.0.105
+
+################################################################################
+
+  shim:
+    image: rvernica/scidb:16.9-pkg
+    container_name: shim
+    volumes:
+      - "${PWD}/target/SciDB-WCS-0.1.jar:/tmp/service.jar"
+      - "${PWD}/src/main/resources/:/opt/scidb/16.9/DB-scidb/0/0/"
+      - "data-volume:/opt/scidb/16.9/DB-scidb/0/0/"
+    ports:
+      - 8082:8080
+      - 8083:8083
+      - 1239:1239
+    networks:
+      network:
+        ipv4_address: 172.52.0.106
+
+################################################################################
+#                                                                              #
+#                     Networks                                                 #
+#                                                                              #
+################################################################################
+
+volumes:
+  data-volume:
+
+networks:
+  network:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.52.0.0/24
+
+################################################################################
+#                                                                              #
+#                     END OF FILE                                              #
+#                                                                              #
+################################################################################
