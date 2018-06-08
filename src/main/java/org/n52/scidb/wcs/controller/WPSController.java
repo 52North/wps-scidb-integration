@@ -45,7 +45,7 @@ public class WPSController {
 
     HttpHeaders headers = new HttpHeaders();
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "insertGeoTiff", method = RequestMethod.POST)
     public ResponseEntity<?> insertGeoTiff(
             @RequestParam("fileURL") String fileURL
     ) {
