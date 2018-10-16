@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import org.n52.scidb.wcs.model.Layer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,24 +63,26 @@ public class SciDBService {
     }
 
     private String performHTTPGet(URL url, boolean keep_newline) {
+        LOG.info("performing HTTP Request on '" + url + "'.");
+        long time_start = System.currentTimeMillis();
         try {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            System.out.println("Performing HTTP GET: " + url);
             int responseCode = con.getResponseCode();
 
             if (responseCode != HttpURLConnection.HTTP_OK) {
-                LOG.error("HTTP GET returned code " + responseCode);
-                System.out.println("HTTP GET returned code " + responseCode);
+                LOG.error("HTTP GET returned code " + responseCode + " on request: ");
+                LOG.error(""+url);
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
                 String line;
-                StringBuffer response = new StringBuffer();
+                StringBuilder response = new StringBuilder();
                 while ((line = in.readLine()) != null) {
                     response.append(line);
                     if (keep_newline) {
                         response.append("\n");
                     }
                 }
+                LOG.error(response.toString());
                 return response.toString();
             } else {
                 LOG.debug("HTTP GET returned HTTP_OK");
@@ -95,11 +98,9 @@ public class SciDBService {
             }
             in.close();
             con.disconnect();
-            System.out.println(url.getPath());
             return response.toString();
         } catch (IOException ex) {
-            LOG.error("Error during HTTP GET request to Shim: " + ex);
-            System.out.println("Error during HTTP GET request to Shim: " + ex);
+            LOG.error("Error during HTTP Request with URL '" + url + "'. Error: " + ex);
         }
         return null;
     }
@@ -122,11 +123,11 @@ public class SciDBService {
             HashMap<String, String> parameters = new HashMap<>();
             parameters.put("id", sessionID);
             parameters.put("query", afl);
-//            parameters.put("release", "0");
+//          parameters.put("release", "0");
             if (outputFormat != null && outputFormat.length() > 0) {
                 parameters.put("save", outputFormat);
             }
-//            parameters.put("stream", "1");
+//          parameters.put("stream", "1");
 
             URL url = new URL("http://" + serveraddress + ":" + serverport + SHIM_EXECUTEQUERY + parsToUrlString(parameters));
             return performHTTPGet(url, false);
@@ -154,8 +155,8 @@ public class SciDBService {
         return null;
     }
 
-    public int[] readPixels(String sessionID, int width, int height) {
-        int[] result = new int[width * height];
+    public String[] readCells(String sessionID, int time, int width, int height) {
+        String[] result = new String[time * width * height];
         if (sessionID == null) {
             return null;
         }
@@ -163,21 +164,20 @@ public class SciDBService {
         pars.put("id", sessionID);
         pars.put("n", "0");
 
+        long time_start = System.currentTimeMillis();
         try {
             URL url = new URL("http://" + serveraddress + ":" + serverport + SHIM_READLINES + parsToUrlString(pars));
 
 //          String response = performHTTPGet(url, true);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
-            System.out.println("Performing HTTP GET: " + url);
-            LOG.debug("Performing HTTP GET: " + url);
             int responseCode = con.getResponseCode();
 
             if (responseCode != HttpURLConnection.HTTP_OK) {
                 LOG.error("HTTP GET returned code " + responseCode);
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
                 String line;
-                StringBuffer response = new StringBuffer();
+                StringBuilder response = new StringBuilder();
                 while ((line = in.readLine()) != null) {
                     response.append(line);
                     response.append("\n");
@@ -193,14 +193,17 @@ public class SciDBService {
             line = in.readLine();
             int counter = 0;
             while ((line = in.readLine()) != null) {
-                int value = Integer.parseInt(
-                        line.substring(line.indexOf(" ") + 1));
+                String value = line.substring(line.indexOf(" ") + 1);
                 result[counter] = value;
                 counter++;
             }
             in.close();
             con.disconnect();
-            System.out.println(url.getPath());
+            LOG.info(url.getPath());
+
+            long time_end = System.currentTimeMillis();
+            long time_diff = (time_end - time_start) / 1000;
+            LOG.info("between returned "+(time*width*height)+" cells within " + time_diff + " sec.");
             return result;
         } catch (IOException ex) {
             LOG.error("Error during HTTP GET request to Shim: " + ex);

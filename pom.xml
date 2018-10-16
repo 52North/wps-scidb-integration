@@ -9,13 +9,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.version>3.7.0</maven.compiler.version>
         <spring.boot.mvn.version>1.5.8.BUILD-SNAPSHOT</spring.boot.mvn.version>
         <spring.boot.version>1.5.8.BUILD-SNAPSHOT</spring.boot.version>
         <slf4j.version>1.7.25</slf4j.version>
         <commons.logging.version>1.2</commons.logging.version>
         <maven.license.plugin.version>1.10.b1</maven.license.plugin.version>
-        <maven.compiler.version>3.7.0</maven.compiler.version>
-        <geotools.version>19-beta</geotools.version>
+        <geotools.version>19-SNAPSHOT</geotools.version>
     </properties>
     <dependencies>
         <!-- spring -->
@@ -51,7 +51,14 @@
             <groupId>org.geotools</groupId>
             <artifactId>gt-main</artifactId>
             <version>${geotools.version}</version>
+            <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.geotools.xsd</groupId>
+            <artifactId>gt-xsd-sld</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
+
         <!--        <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-coverage</artifactId>
@@ -141,18 +148,25 @@
             <version>1.1.8</version>
         </dependency>
 
-
-
-
-
-
         
         <!-- others -->
         <!--        <dependency>
             <groupId>it.geosolutions.imageio-ext</groupId>
             <artifactId>imageio-ext-tiff</artifactId>
             <version>1.2-M102011</version>
-        </dependency>-->
+        </dependency>--><!-- https://mvnrepository.com/artifact/edu.ucar/netcdf -->
+        <dependency>
+            <groupId>edu.ucar</groupId>
+            <artifactId>netcdf</artifactId>
+            <version>4.3.22</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.7</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     
     <build>

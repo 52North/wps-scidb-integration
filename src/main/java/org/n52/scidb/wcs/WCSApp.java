@@ -1,19 +1,17 @@
 /*
  * TODO: Add License Header
  */
- /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package org.n52.scidb.wcs;
 
-import org.n52.scidb.wcs.model.RasterPixelArrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -22,8 +20,10 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan({"org.n52.scidb.wcs"})
+@ComponentScan({"org.n52.scidb"})
+@ComponentScan({"org.n52.scidb.wms"})
+@ComponentScan({"org.n52.scidb.util"})
 @ComponentScan({"org.n52.scidb.wcs.model"})
-@EnableConfigurationProperties(RasterPixelArrays.class)
 public class WCSApp {
 
     private static final Logger LOG = LoggerFactory.getLogger(WCSApp.class);

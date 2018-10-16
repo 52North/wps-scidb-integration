@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WMSCapabilities>
+  <Service>
+    <Name>WMS</Name>
+    <Title>SciDB-WMS</Title>
+    <Abstract>The Spatial SciDB WMS Service</Abstract>
+    <KeywordList>
+      <Keyword>SciDB</Keyword>
+      <Keyword>WMS</Keyword>
+      <Keyword>some more</Keyword>
+    </KeywordList>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="https://www.w3.org/1999/xlink" xlink:href="http://localhost:8081/api/getWMSCapabilities" />
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/png</Format>
+        <Format>image/jpeg</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xmlns:xlink="https://www.w3.org/1999/xlink" xlink:href="http://localhost:8081/api/getWMSCapabilities" />
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+    </Request>
+    <Exception>
+      <Format>XML</Format>
+    </Exception>
+    <Layer>
+      <Title>PASSAUNA</Title>
+      <Layer>
+        <Name>PASSAUNA</Name>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMSCapabilities>

@@ -30,7 +30,7 @@
 ################################################################################
 #                                                                              #
 #                                                                              #
-#   Before starting:                                                           #                                              #
+#   Before starting:                                                           #
 #     - requies environment where PWD is supported (git bash under             #
 #       windows).                                                              #
 #                                                                              #
@@ -45,16 +45,47 @@ version: '3'
 #                     Services                                                 #
 #                                                                              #
 ################################################################################
-services:
 
-  wms:
-    image: openjdk:8-jdk-alpine
-    container_name: wms
+services:
+    
+  filehost:
+#    image: nginx:alpine
+    image: nginx:stable-alpine
+    container_name: filehost
+    ports:
+      - 8082:80
     volumes:
+      - "${PWD}/etc/files:/usr/share/nginx/html"
+    networks:
+      network:
+        ipv4_address: 172.52.0.104
+
+################################################################################
+
+  scidb-wps:
+    image: mojioms/scidb-wps:0.9
+#    image: scidb-wps
+    container_name: scidb-wps
+    ports:
+      - 8084:8084
+      - 8090:8090
+    networks:
+      network:
+        ipv4_address: 172.52.0.107
+
+################################################################################
+
+  app:
+    image: openjdk:8-jdk-alpine
+    container_name: app
+    volumes:
+      - "${PWD}/etc/files:/usr/share/nginx/html"
+      - "${PWD}/etc/files:/wms/"
       - "${PWD}/target/SciDB-WCS-0.1.jar:/tmp/service.jar"
-      - "${PWD}/src/main/resources/arraystorage.txt:/opt/scidb/16.9/DB-scidb/0/0/arraystorage.txt"
-      - "${PWD}/src/main/resources/:/opt/scidb/16.9/DB-scidb/0/0/"
-      - "data-volume:/opt/scidb/16.9/DB-scidb/0/0/"
+      - "${PWD}/etc/wms/arraystorage.asdf:/wms/arraystorage.asdf"
+      - "${PWD}/etc/wms/wmsGetCapabilities.xml:/wms/wmsGetCapabilities.xml"
+#      - "data-volume:/opt/scidb/18.1/DB-scidb/0/0/"
+      - "data-a-volume:/opt/scidb/18.1/DB-scidb/"
     ports:
       - 8081:8081
       - 8085:8085
@@ -64,6 +95,7 @@ services:
       "-Xrunjdwp:transport=dt_socket,server=y,address=8085,suspend=n",
       "-jar",
       "/tmp/service.jar",
+      
       "--server.servlet.contextPath=/",
       "--server.port=8081",
       "--shim.address=172.52.0.106",
@@ -72,18 +104,41 @@ services:
     networks:
       network:
         ipv4_address: 172.52.0.105
-
+        
 ################################################################################
 
+#  shim:
+#    image: rvernica/scidb:16.9-pkg
+#    container_name: shim
+#    volumes:
+##      - "${PWD}/target/SciDB-WCS-0.1.jar:/tmp/service.jar"
+##      - "${PWD}/etc/shim/:/opt/"
+##      - "${PWD}/etc/shim/:/opt/scidb/16.9/DB-scidb/"
+#      - "data-volume:/opt/scidb/16.9/DB-scidb/0/0/"
+#    ports:
+#      - 8082:8080
+#      - 8083:8083
+#      - 1239:1239 
+#    networks:
+#      network:
+#        ipv4_address: 172.52.0.106
+
   shim:
-    image: rvernica/scidb:16.9-pkg
+    image: rvernica/scidb:18.1-ext
+#    command: [
+#       "-it",
+#       "--detach"
+#    ]
     container_name: shim
     volumes:
-      - "${PWD}/target/SciDB-WCS-0.1.jar:/tmp/service.jar"
-      - "${PWD}/src/main/resources/:/opt/scidb/16.9/DB-scidb/0/0/"
-      - "data-volume:/opt/scidb/16.9/DB-scidb/0/0/"
+#      - "${PWD}~/scratch:/scratch/"
+#      - "data-volume:/scratch/"
+#      - "${PWD}/etc/shim/:/opt/"
+#      - "data-volume:"
+#      - "data-volume:/opt/"
+       - "data-a-volume:/opt/scidb/18.1/DB-scidb/"
     ports:
-      - 8082:8080
+      - 8080:8080
       - 8083:8083
       - 1239:1239
     networks:
@@ -97,7 +152,7 @@ services:
 ################################################################################
 
 volumes:
-  data-volume:
+  data-a-volume:
 
 networks:
   network:
