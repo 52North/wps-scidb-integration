@@ -18,6 +18,19 @@
         <geotools.version>19-SNAPSHOT</geotools.version>
     </properties>
     <dependencies>
+        <!-- 52north -->
+        <dependency>
+            <groupId>org.n52.sensorweb</groupId>
+            <artifactId>52n-xml-sld-v110</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans -->
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        
         <!-- spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -180,7 +193,13 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <executable>true</executable>
+                    <jvmArguments>
+                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8085
+                    </jvmArguments>
                 </configuration>
+<!--                <configuration>
+                    <executable>true</executable>
+                </configuration>-->
                 <executions>
                     <execution>
                         <goals>
