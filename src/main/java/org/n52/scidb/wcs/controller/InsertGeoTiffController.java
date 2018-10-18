@@ -230,7 +230,7 @@ public class InsertGeoTiffController {
                         new Channel("" + (numberTotalAttributes + 1)),
                         new Channel("" + (numberTotalAttributes + 2)),
                         new Channel("" + (numberTotalAttributes + 3)),
-                        new ArrayList<StyleColorMapEntry>(),
+                        null,
                         1);
 
                 Layer newLayer = new Layer(
@@ -524,8 +524,8 @@ public class InsertGeoTiffController {
             GridCoordinates maxDimensions = dimensions.getHigh();
             width = maxDimensions.getCoordinateValue(0) + 1;
             height = maxDimensions.getCoordinateValue(1) + 1;
-            width = 300;
-            height = 300;
+//            width = 300;
+//            height = 300;
 
             GridCoverage2D coverage = reader.read(
                     new GeneralParameterValue[]{policy, gridsize, useJaiRead}

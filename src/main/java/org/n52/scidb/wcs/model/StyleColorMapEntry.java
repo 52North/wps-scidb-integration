@@ -19,26 +19,10 @@ public class StyleColorMapEntry implements Serializable, Comparable<StyleColorMa
 
     private Color color;
     private double quantity;
-    private double opacity;
 
-    public StyleColorMapEntry(String color, Double quantity, Double opacity) {
+    public StyleColorMapEntry(String color, Double quantity) {
         this.color = Color.decode(color);
         this.quantity = quantity;
-        if (opacity != null
-                && opacity >= 0
-                && opacity <= 1) {
-            this.opacity = opacity;
-        } else {
-            this.opacity = 1.0;
-        }
-    }
-
-    public double getOpacity() {
-        return opacity;
-    }
-
-    public void setOpacity(double opacity) {
-        this.opacity = opacity;
     }
 
     public Color getColor() {

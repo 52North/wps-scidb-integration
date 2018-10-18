@@ -1,17 +1,14 @@
 /*
  * TODO: Add License Header
  */
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package org.n52.scidb.wcs.model;
 
-import java.awt.Color;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,32 +22,19 @@ public class Style implements Serializable {
     private Channel redChannel;
     private Channel greenChannel;
     private Channel blueChannel;
-    private ArrayList<StyleColorMapEntry> colorMap;
-    private String colorMapType;
     private Double globalOpacity;
+    private ColorMap colorMap;
 
     public Style() {
     }
 
-    public Style(String sldName, Channel redChannel, Channel greenChannel, Channel blueChannel, ArrayList<StyleColorMapEntry> colorMap, double opacity) {
-        this.sldName = sldName;
+    public Style(String seName, Channel redChannel, Channel greenChannel, Channel blueChannel, ColorMap colorMap, double opacity) {
+        this.sldName = seName;
         this.redChannel = redChannel;
         this.greenChannel = greenChannel;
         this.blueChannel = blueChannel;
-        this.colorMap = colorMap;
-        this.colorMapType = "ramp";
         this.globalOpacity = opacity;
-        setUpForApply();
-    }
-
-    public Style(String sldName, Channel redChannel, Channel greenChannel, Channel blueChannel, ArrayList<StyleColorMapEntry> colorMap, String colorMapType, double opacity) {
-        this.sldName = sldName;
-        this.redChannel = redChannel;
-        this.greenChannel = greenChannel;
-        this.blueChannel = blueChannel;
         this.colorMap = colorMap;
-        this.colorMapType = colorMapType;
-        this.globalOpacity = opacity;
         setUpForApply();
     }
 
@@ -68,14 +52,6 @@ public class Style implements Serializable {
 
     private void setOpacity(double opacity) {
         this.globalOpacity = opacity;
-    }
-
-    public String getColorMapType() {
-        return colorMapType;
-    }
-
-    private void setColorMapType(String colorMapType) {
-        this.colorMapType = colorMapType;
     }
 
     public Channel getRedChannel() {
@@ -102,11 +78,11 @@ public class Style implements Serializable {
         this.blueChannel = blueChannel;
     }
 
-    public ArrayList<StyleColorMapEntry> getColorMap() {
+    public ColorMap getColorMap() {
         return colorMap;
     }
 
-    private void setColorMap(ArrayList<StyleColorMapEntry> colorMap) {
+    public void setColorMap(ColorMap colorMap) {
         this.colorMap = colorMap;
     }
 
@@ -140,7 +116,6 @@ public class Style implements Serializable {
         if (channelCount > 1) {
             hasMultipleChannelsSelected = true;
         }
-        Collections.sort(this.colorMap);
         alpha = 255;
         if (this.globalOpacity != null
                 && this.globalOpacity >= 0
@@ -173,76 +148,8 @@ public class Style implements Serializable {
                     | (cellValueGreen << 8)
                     | cellValueBlue;
         }
-        switch (colorMapType) {
-            case "values":
-                return getPixelByValuesStyle(value);
-            case "intervals":
-                return getPixelByIntervalsStyle(value);
-            case "ramp":
-            default:
-                return getPixelByRampStyle(value);
-        }
-    }
-
-    private int getPixelByValuesStyle(int value) {
-        Color c = Color.decode("#000000");
-        boolean rendered = false;
-        for (StyleColorMapEntry colorEntry : colorMap) {
-            if (value == colorEntry.getQuantity()) {
-                c = colorEntry.getColor();
-                alpha = (int) (255 * colorEntry.getOpacity());
-                rendered = true;
-            } else {
-                break;
-            }
-        }
-        if (rendered) {
-            return (alpha << 24) | (c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue();
-        } else {
-            return (1 << 24) | (1 << 16) | (1 << 8) | 1;
-        }
-    }
-
-    private int getPixelByIntervalsStyle(int value) {
-        boolean rendered = false;
-        Color c = null;
-        for (StyleColorMapEntry colorEntry : colorMap) {
-            if (value >= colorEntry.getQuantity()) {
-                c = colorEntry.getColor();
-                alpha = (int) (255 * colorEntry.getOpacity());
-                rendered = true;
-            } else {
-                break;
-            }
-        }
-        if (rendered) {
-            return (alpha << 24) | (c.getRed() << 16) | (c.getGreen() << 8) | c.getBlue();
-        } else {
-            return (1 << 24) | (1 << 16) | (1 << 8) | 1;
-        }
-    }
-
-    private int getPixelByRampStyle(int value) {
-        for (int i = 0; i < colorMap.size() - 1; i++) {
-            StyleColorMapEntry lowerBound = colorMap.get(i);
-            StyleColorMapEntry higherBound = colorMap.get(i + 1);
-            if (value >= lowerBound.getQuantity()
-                    && value < higherBound.getQuantity()) {
-                int redStart = lowerBound.getColor().getRed();
-                int greenStart = lowerBound.getColor().getGreen();
-                int blueStart = lowerBound.getColor().getBlue();
-                int redEnd = higherBound.getColor().getRed();
-                int greenEnd = higherBound.getColor().getGreen();
-                int blueEnd = higherBound.getColor().getBlue();
-                double ratio = (value - lowerBound.getQuantity()) / (higherBound.getQuantity() - lowerBound.getQuantity());
-                alpha = (int) (255 * (lowerBound.getOpacity() + ratio * (higherBound.getOpacity() - lowerBound.getOpacity())));
-                return (alpha << 24)
-                        | (((int) (redStart + ratio * (redEnd - redStart))) << 16)
-                        | (((int) (greenStart + ratio * (greenEnd - greenStart))) << 8)
-                        | ((int) (blueStart + ratio * (blueEnd - blueStart)));
-            }
-        }
-        return (1 << 24) | (1 << 16) | (1 << 8) | 1;
+        return (alpha << 24)
+                | this.colorMap.getRenderedPixel(value);
     }
 
 }
