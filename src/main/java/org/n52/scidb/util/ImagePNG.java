@@ -47,8 +47,6 @@ public class ImagePNG implements OutputFormat {
 
     public byte[] getOutputFormat(ArrayList<Layer> layers, ArrayList<Style> styles, int time, int width, int height, String[] pixels, int resultWidth, int resultHeight) {
         BufferedImage image = new BufferedImage(time * resultWidth, resultHeight, BufferedImage.TYPE_INT_ARGB);
-        int percent = 0;
-        int previous = 0;
         int old = -1;
         Style layerStyle = styles.get(0);
         
@@ -62,23 +60,8 @@ public class ImagePNG implements OutputFormat {
                     old = index;
                     String[] pixel = pixels[index].split(",");
                     
-//                    int a = 255; // TODO: manage by opacity
                     int p = layerStyle.getStyleAppliedPixel(pixel, layers.get(0).getStartAttributeIndex());
                     image.setRGB(t * (resultWidth - 1) + x, y, p);
-                }
-                if (time == 1) {
-                    percent = (t * 100 / time);
-                    if (previous < percent) {
-                        previous = percent;
-                        LOG.info("filling image: " + percent + "%");
-                    }
-                }
-            }
-            if (time > 1) {
-                percent = (t * 100 / time);
-                if (previous < percent) {
-                    previous = percent;
-                    LOG.info("filling image: " + percent + "%");
                 }
             }
         }

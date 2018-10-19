@@ -248,7 +248,7 @@ public class WmsController {
                     LOG.info(" ");
                     return new ResponseEntity(media, headers, HttpStatus.OK);
                 case "netCDF":
-                    of = new NetCDF();
+                    of = new NetCDF(x_min, y_min, x_max, y_max);
                     media = (byte[]) of.getOutputFormat(
                             layerStack,
                             matchingStyles,
