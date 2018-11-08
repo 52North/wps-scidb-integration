@@ -157,5 +157,4 @@ public class WPSController {
         return new ResponseEntity("{\"ok\": \"done\"}", HttpStatus.OK);
     };
 
-
 }

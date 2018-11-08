@@ -8,6 +8,8 @@
  */
 package org.n52.scidb.wcs.controller;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
 import org.geotools.coverage.grid.GridCoordinates2D;
 import org.geotools.coverage.grid.GridCoverage2D;
 import org.geotools.coverage.grid.io.AbstractGridFormat;
@@ -41,7 +44,6 @@ import org.n52.scidb.wcs.model.Channel;
 import org.n52.scidb.wcs.model.Layer;
 import org.n52.scidb.wcs.model.PathToFile;
 import org.n52.scidb.wcs.model.Style;
-import org.n52.scidb.wcs.model.StyleColorMapEntry;
 import org.n52.scidb.wcs.services.SciDBService;
 import org.opengis.coverage.grid.GridCoordinates;
 import org.opengis.coverage.grid.GridEnvelope;
@@ -227,9 +229,12 @@ public class InsertGeoTiffController {
                 int numberTotalAttributes = newAoI.getTotalAttributes();
                 Style newDefaultStyle = new Style(
                         "Default Style Layer " + currentLayerName,
-                        new Channel("" + (numberTotalAttributes + 1)),
-                        new Channel("" + (numberTotalAttributes + 2)),
-                        new Channel("" + (numberTotalAttributes + 3)),
+                        //                        new Channel("" + (numberTotalAttributes + 1)),
+                        //                        new Channel("" + (numberTotalAttributes + 2)),
+                        //                        new Channel("" + (numberTotalAttributes + 3)),
+                        new Channel("1"),
+                        new Channel("2"),
+                        new Channel("3"),
                         null,
                         1);
 
@@ -381,7 +386,13 @@ public class InsertGeoTiffController {
         useJaiRead.setValue(false);
         try {
             GeoTiffReader reader = new GeoTiffReader(rasterFile);
-            int numBands = reader.getGridCoverageCount();
+//            int numBands = reader.getGridCoverageCount();
+
+            BufferedImage img = ImageIO.read(rasterFile);
+            // ColorModel colorModel = img.getColorModel(      
+            WritableRaster raster = img.getRaster();
+
+            int numBands = raster.getNumBands();
 
             GridCoverage2D coverage = reader.read(
                     new GeneralParameterValue[]{policy, gridsize, useJaiRead}
@@ -396,10 +407,16 @@ public class InsertGeoTiffController {
             URI fileUri = fileRscPath.toUri();
             FileOutputStream fileWriter = new FileOutputStream(new File(fileUri), true);
 
-            int[] vals = new int[Math.max(numBands * 4, newAoI.getTotalAttributes())];
+//            int[] vals = new int[Math.max(numBands * 4, newAoI.getTotalAttributes())];
+            int[] vals = new int[Math.max(numBands, newAoI.getTotalAttributes())];
             // fill binary file with bytes:
 
             for (int i = 0; i < width; i++) {
+                percent = i * 100 / width;
+                if (percent > old) {
+                    old = percent;
+                    LOG.info("Iterating input pixels: " + percent + "%");
+                }
                 for (int j = 0; j < height; j++) {
                     coverage.evaluate(new GridCoordinates2D(i, j), vals);
                     // get Bandvalue:
@@ -418,11 +435,6 @@ public class InsertGeoTiffController {
                             fileWriter.write((byte) 00);
                         }
                     }
-                }
-                percent = i * 100 / width;
-                if (percent > old) {
-                    old = percent;
-                    LOG.info("Iterating input pixels: " + percent + "%");
                 }
             }
             fileWriter.close();
@@ -524,8 +536,8 @@ public class InsertGeoTiffController {
             GridCoordinates maxDimensions = dimensions.getHigh();
             width = maxDimensions.getCoordinateValue(0) + 1;
             height = maxDimensions.getCoordinateValue(1) + 1;
-//            width = 300;
-//            height = 300;
+            width = 10;
+            height = 10;
 
             GridCoverage2D coverage = reader.read(
                     new GeneralParameterValue[]{policy, gridsize, useJaiRead}

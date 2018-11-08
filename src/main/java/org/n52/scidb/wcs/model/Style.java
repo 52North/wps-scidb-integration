@@ -125,6 +125,12 @@ public class Style implements Serializable {
     }
 
     public int getStyleAppliedPixel(String[] cellValue, int startAttributeIndex) {
+        if (cellValue[0].equals("NOT_FOUND")) {
+            return (0 << 24)
+                    | (0 << 16)
+                    | (0 << 8)
+                    | 0;
+        }
         int cellValueRed = 0;
         int value = 0;
         if (sciDBAttrRed != -1) {

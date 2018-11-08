@@ -9,3 +9,5 @@ src/main/resources/storage.cfg
 src/main/resources/storage.header
 src/main/resources/storage.log_1
 src/main/resources/storage.log_2
+files/
+etc/WPS

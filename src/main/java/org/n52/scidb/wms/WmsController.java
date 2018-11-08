@@ -149,24 +149,6 @@ public class WmsController {
         double bboxMaxX = Double.parseDouble(bboxParams[2]);
         double bboxMaxY = Double.parseDouble(bboxParams[3]);
 
-        if (bboxMinX < x_min) {
-            return new ResponseEntity("{\"error\": \"BoundingBox parameter 1st argument '" + bboxMinX + "' exceeds AreaOfInterest '" + aoi.getName() + "'s coverage of '" + x_min + "'.\"}", jsonHeaders, HttpStatus.NOT_FOUND);
-        }
-        if (bboxMinY > y_max) {
-            return new ResponseEntity("{\"error\": \"BoundingBox parameter 2nd argument '" + bboxMinY + "' exceeds AreaOfInterest '" + aoi.getName() + "'s coverage of '" + y_max + "'.\"}", jsonHeaders, HttpStatus.NOT_FOUND);
-        }
-        if (bboxMaxX > x_max) {
-            return new ResponseEntity("{\"error\": \"BoundingBox parameter 3rd argument '" + bboxMaxX + "' exceeds AreaOfInterest '" + aoi.getName() + "'s coverage of '" + x_max + "'.\"}", jsonHeaders, HttpStatus.NOT_FOUND);
-        }
-        if (bboxMaxY < y_min) {
-            return new ResponseEntity("{\"error\": \"BoundingBox parameter 4th argument '" + bboxMaxY + "' exceeds AreaOfInterest '" + aoi.getName() + "'s coverage of '" + y_min + "'.\"}", jsonHeaders, HttpStatus.NOT_FOUND);
-        }
-        if (bboxMinX > bboxMaxX) {
-            return new ResponseEntity("{\"error\": \"Invalid Bounding Box Arguments. Lower Corner '" + bboxMinX + "' is greather than Upper Corner '" + bboxMaxX + "'.\"}", jsonHeaders, HttpStatus.BAD_REQUEST);
-        }
-        if (bboxMinY > bboxMaxY) {
-            return new ResponseEntity("{\"error\": \"Invalid Bounding Box Arguments. Lower Corner '" + bboxMinY + "' is greather than Upper Corner '" + bboxMaxY + "'.\"}", jsonHeaders, HttpStatus.BAD_REQUEST);
-        }
         int height = aoi.getHeight();
         int width = aoi.getWidth();
 
@@ -215,7 +197,8 @@ public class WmsController {
                 (yEnd - yStart),
                 resultWidth,
                 resultHeight,
-                sciService.readCells(sessionID, (tEnd - tStart + 1), (xEnd - xStart), (yEnd - yStart)));
+//                sciService.readCells(sessionID, (tEnd - tStart + 1), (xEnd - xStart), (yEnd - yStart)));
+                sciService.readCells(sessionID, tStart, xStart, yStart, tEnd, xEnd, yEnd, width, height));
 
         if (response.startsWith("UserQueryException")) {
             return new ResponseEntity("{\"error\": \"Array '" + aoi.getName() + "' not found.\", \"exception:\": \"" + response + "\"}", jsonHeaders, HttpStatus.NOT_FOUND);
