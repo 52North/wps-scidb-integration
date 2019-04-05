@@ -1,2 +1,0 @@
-# SciDB-WCS
-TODO: Description
