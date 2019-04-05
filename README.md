@@ -92,7 +92,7 @@ reservoir that are applicable worldwide.
 
 <b id="user-content-f5">5</b>: https://52north.org/references/mudak-wrm/ [↩](#user-content-a5)
 
-<b id="user-content-f5">5</b>: https://meetingorganizer.copernicus.org/EGU2019/EGU2019-14204-2.pdf [↩](#user-content-a6)
+<b id="user-content-f6">6</b>: https://meetingorganizer.copernicus.org/EGU2019/EGU2019-14204-2.pdf [↩](#user-content-a6)
 
 <b id="user-content-f7">7</b>: https://github.com/BenGraeler [↩](#user-content-a7)
 
