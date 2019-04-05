@@ -1,10 +1,16 @@
 # WPS SciDB Integration
 
+
 ## tl;dr
 
-This implementation provides an connection between a WPS<sup id="user-content-a1">[1](#user-content-f1)</sup>
-and SciDB<sup id="user-content-a2">[2](#user-content-f2)</sup>. It allows accessing data in an SciDB instance using
-WMS<sup id="user-content-a3">[3](#user-content-f3)</sup> and WCS<sup id="user-content-a4">[4](#user-content-f4)</sup>
+This implementation provides an connection between a
+WPS<sup id="user-content-a1">[1](#user-content-f1)</sup>
+and
+SciDB<sup id="user-content-a2">[2](#user-content-f2)</sup>
+. It allows accessing data in an SciDB instance using
+WMS<sup id="user-content-a3">[3](#user-content-f3)</sup>
+and
+WCS<sup id="user-content-a4">[4](#user-content-f4)</sup>
 operations. The access is implemented via WPS processes offered in a
 transparent manner via a proxy web service.
 
@@ -51,23 +57,28 @@ the quality of a reservoir detailed enough for a mid-range management of the
 reservoir that are applicable worldwide.
 
 
+## References
+
+* Developed within the
+  MuDak-WRM<sup id="user-content-a5">[5](#user-content-f5)</sup>
+  project funded by the German Federal Ministry of Education and Research (BMBF)
+  with in the GRoW funding measure.
+
+* Presented at EGU 2019 with a
+  poster<sup id="user-content-a6">[6](#user-content-f6)</sup>.
+
+
 ## Contact
 
-* Benedik Gräler ([BenGraeler](https://github.com/BenGraeler))
-* Eike Hinderk Jürrens ([EHJ-52n](https://github.com/EHJ-52n/))
+* Benedik Gräler<sup id="user-content-a7">[7](#user-content-f7)</sup>
+* Eike Hinderk Jürrens<sup id="user-content-a8">[8](#user-content-f8)</sup>
 
 
 ## Developers
 
-* Eike Hinderk Jürrens ([EHJ-52n](https://github.com/EHJ-52n/))
+* Eike Hinderk Jürrens
 * Maurin Radtke
 
-
-## References
-
-* Developed within the MuDak-WRM<sup id="user-content-a5">[5](#user-content-f5)</sup>] project funded by the German Federal Ministry of Education and Research (BMBF) with in the GRoW funding measure.
-
-* Presented at EGU 2019 with a poster<sup id="user-content-a6">[6](#user-content-f6)</sup>.
 
 ## Links
 
@@ -82,3 +93,7 @@ reservoir that are applicable worldwide.
 <b id="user-content-f5">5</b>: https://52north.org/references/mudak-wrm/ [↩](#user-content-a5)
 
 <b id="user-content-f5">5</b>: https://meetingorganizer.copernicus.org/EGU2019/EGU2019-14204-2.pdf [↩](#user-content-a6)
+
+<b id="user-content-f7">7</b>: https://github.com/BenGraeler [↩](#user-content-a7)
+
+<b id="user-content-f8">8</b>: https://github.com/EHJ-52n/ [↩](#user-content-a8)
