@@ -80,6 +80,16 @@ reservoir that are applicable worldwide.
 * Maurin Radtke
 
 
+## License
+
+This implementation is provided under the Apache 2.0
+license<sup id="user-content-a9">[9](#user-content-f9)</sup>.
+See the following files for more details:
+
+* `./LICENSE`
+* `./NOTICE`
+
+
 ## Links
 
 <b id="user-content-f1">1</b>: https://www.opengeospatial.org/standards/wps [↩](#user-content-a1)
@@ -97,3 +107,5 @@ reservoir that are applicable worldwide.
 <b id="user-content-f7">7</b>: https://github.com/BenGraeler [↩](#user-content-a7)
 
 <b id="user-content-f8">8</b>: https://github.com/EHJ-52n/ [↩](#user-content-a8)
+
+<b id="user-content-f9">9</b>: https://www.apache.org/licenses/LICENSE-2.0 [↩](#user-content-a9)
